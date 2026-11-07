@@ -1,22 +1,50 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
 
 const composition = [
-  { title: "Crude protein", id: "crude-protein" },
-  { title: "Crude Fat", id: "crude-fat" },
-  { title: "Crude fiber", id: "crude-fiber" },
+  { title: "Crude Protein", id: "protein" },
+  { title: "Crude Fat", id: "fat" },
+  { title: "Crude Fiber", id: "fiber" },
   { title: "Moisture", id: "moisture" },
   { title: "Ash", id: "ash" },
 ];
 
+function Button() {
+  return (
+    <button
+      className="block w-full rounded-lg border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white transition-colors hover:bg-transparent hover:text-indigo-600"
+      type="submit"
+    >
+      Calculate
+    </button>
+  );
+}
+
 export default function Home() {
+  const [values, setValues] = useState({
+    protein: "",
+    fat: "",
+    fiber: "",
+    moisture: "",
+    ash: "",
+  });
+
+  function handleCalculate(e: React.SubmitEvent<HTMLFormElement>) {
+    e.preventDefault(); // stop the browser from reloading the page
+    console.log(values); // try it: open DevTools → Console
+  }
+
   const compositionItems = composition.map((item) => (
-    <div>
+    <div key={item.id} className="flex flex-col">
       <label className="block mb-2.5 text-sm font-medium text-heading">
-        {item.title}
+        {item.title} (%)
       </label>
       <input
         type="number"
         id={item.id}
+        value={values[item.id as keyof typeof values]}
+  onChange={(e) => setValues({ ...values, [item.id]: e.target.value })}
         className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-2.5 py-2 shadow-xs placeholder:text-body"
         placeholder=""
         required
@@ -38,16 +66,12 @@ export default function Home() {
           of wet and dry foods on an equal basis.
         </p>
       </div>
-      <div className="grid grid-cols-2">
+
+      <div className="grid grid-cols-2 py-5">
         <div className="flex flex-col">
-          <form className="max-w-sm mx-auto space-y-4">
+          <form className="max-w-sm mx-auto space-y-4" onSubmit={handleCalculate}>
             {compositionItems}
-            <button
-              className="block w-full rounded-lg border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white transition-colors hover:bg-transparent hover:text-indigo-600"
-              type="submit"
-            >
-              Calculate
-            </button>
+            <Button />
           </form>
         </div>
         <div className="flex flex-col">Results here</div>
