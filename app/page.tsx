@@ -10,6 +10,10 @@ const composition = [
   { title: "Ash", id: "ash" },
 ];
 
+// Rough average ash values (as fed) to use when the label doesn't list ash.
+// Real foods vary, so results using these are estimates.
+const ESTIMATED_ASH = { dry: 6, wet: 3 };
+
 function Button() {
   return (
     <button
@@ -30,9 +34,18 @@ export default function Home() {
     ash: "",
   });
 
+
+  const [ashNotListed, setAshNotListed] = useState(false);
+  // radio button for wet or dry food for Ash when Ash is not listed on the label
+  const [foodType, setFoodType] = useState<"dry" | "wet">("dry");
+
   function handleCalculate(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault(); // stop the browser from reloading the page
     console.log(values); // try it: open DevTools → Console
+
+    // NEW: use the estimate when ash isn't listed, otherwise what the user typed
+    const ash = ashNotListed ? ESTIMATED_ASH[foodType] : Number(values.ash);
+    console.log("ash used:", ash);
   }
 
   const compositionItems = composition.map((item) => (
@@ -41,14 +54,56 @@ export default function Home() {
         {item.title} (%)
       </label>
       <input
-        type="number"
+        type="number" step="any" min="0" max="100"
         id={item.id}
         value={values[item.id as keyof typeof values]}
   onChange={(e) => setValues({ ...values, [item.id]: e.target.value })}
         className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-2.5 py-2 shadow-xs placeholder:text-body"
         placeholder=""
-        required
+        // NEW: when ash isn't listed, the ash input is greyed out and not required
+        required={!(item.id === "ash" && ashNotListed)}
+        disabled={item.id === "ash" && ashNotListed}
       />
+
+      {/* NEW: only render these extra controls under the Ash input */}
+      {item.id === "ash" && (
+        <div className="mt-2 space-y-2">
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              checked={ashNotListed}
+              onChange={(e) => setAshNotListed(e.target.checked)}
+            />
+            Ash is not listed
+          </label>
+
+          {/* Radio buttons only appear when the box is checked */}
+          {ashNotListed && (
+            <div className="flex gap-4 pl-6 text-sm text-gray-700">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="foodType"
+                  value="dry"
+                  checked={foodType === "dry"}
+                  onChange={() => setFoodType("dry")}
+                />
+                Dry food
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="foodType"
+                  value="wet"
+                  checked={foodType === "wet"}
+                  onChange={() => setFoodType("wet")}
+                />
+                Wet food
+              </label>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   ));
 
