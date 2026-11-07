@@ -80,25 +80,39 @@ export default function Home() {
           {/* Radio buttons only appear when the box is checked */}
           {ashNotListed && (
             <div className="flex gap-4 pl-6 text-sm text-gray-700">
-              <label className="flex items-center gap-2">
+              <label className="flex items-start gap-2">
                 <input
                   type="radio"
                   name="foodType"
                   value="dry"
                   checked={foodType === "dry"}
                   onChange={() => setFoodType("dry")}
+                  className="mt-1"
                 />
-                Dry food
+                <span>
+                  Dry food
+                  {/* NEW: the number comes from ESTIMATED_ASH, so it stays in sync */}
+                  <span className="block text-xs text-gray-500">
+                    Uses a {ESTIMATED_ASH.dry}% ash estimate
+                  </span>
+                </span>
               </label>
-              <label className="flex items-center gap-2">
+              <label className="flex items-start gap-2">
                 <input
                   type="radio"
                   name="foodType"
                   value="wet"
                   checked={foodType === "wet"}
                   onChange={() => setFoodType("wet")}
+                  className="mt-1"
                 />
-                Wet food
+                <span>
+                  Wet food
+                  {/* NEW: the number comes from ESTIMATED_ASH, so it stays in sync */}
+                  <span className="block text-xs text-gray-500">
+                    Uses a {ESTIMATED_ASH.wet}% ash estimate
+                  </span>
+                </span>
               </label>
             </div>
           )}
@@ -122,9 +136,9 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 py-5">
+      <div className="grid md:grid-cols-2 py-5">
         <div className="flex flex-col">
-          <form className="max-w-sm mx-auto space-y-4" onSubmit={handleCalculate}>
+          <form className="w-full max-w-sm mx-auto space-y-4" onSubmit={handleCalculate}>
             {compositionItems}
             <Button />
           </form>
