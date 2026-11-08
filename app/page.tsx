@@ -220,7 +220,7 @@ export default function Home() {
   ));
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-16">
+    <main className="max-w-5xl mx-auto px-4 py-3">
       <div>
         <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl py-5">
           Dry Food Matter Analysis
@@ -229,8 +229,8 @@ export default function Home() {
           for Cat and Dog Food
         </h2>
         <p className="mt-4 text-base text-pretty text-gray-700 sm:text-lg/relaxed">
-          Remove moisture from the equation to compare the true nutrient content
-          of wet and dry foods on an equal basis.
+          Remove water from the equation to compare wet and dry foods on an
+          equal basis.
         </p>
       </div>
 
@@ -256,12 +256,7 @@ export default function Home() {
           </form>
         </div>
         <div className="flex flex-col">
-          {results ? (
-            <ul className="space-y-2">{resultItems}</ul>
-          ) : (
-            <p className="text-gray-700">Enter values and click Calculate</p>
-          )}
-
+          {results && <ul className="space-y-2">{resultItems}</ul>}
           {results && results.carbs < 0 && (
             <p className="mt-4 text-sm">
               Carbohydrates came out below 0%. Protein and fat on the label are
