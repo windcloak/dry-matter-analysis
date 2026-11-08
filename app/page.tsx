@@ -34,7 +34,6 @@ export default function Home() {
     ash: "",
   });
 
-
   const [ashNotListed, setAshNotListed] = useState(false);
   // radio button for wet or dry food for Ash when Ash is not listed on the label
   const [foodType, setFoodType] = useState<"dry" | "wet">("dry");
@@ -43,9 +42,21 @@ export default function Home() {
     e.preventDefault(); // stop the browser from reloading the page
     console.log(values); // try it: open DevTools → Console
 
-    // NEW: use the estimate when ash isn't listed, otherwise what the user typed
+    const protein = Number(values.protein);
+    const fat = Number(values.fat);
+    const fiber = Number(values.fiber);
+    const moisture = Number(values.moisture);
+
+    // Use the estimate when ash isn't listed, otherwise what the user typed
     const ash = ashNotListed ? ESTIMATED_ASH[foodType] : Number(values.ash);
     console.log("ash used:", ash);
+
+    let dryMatter = 100 - moisture;
+    let proteinDM = (protein / dryMatter) * 100;
+    let fatDM = (fat / dryMatter) * 100;
+    let fiberDM = (fiber / dryMatter) * 100;
+    let ashDM = (ash / dryMatter) * 100;
+    let carbDM = 100 - (proteinDM + fatDM + fiberDM + ashDM);
   }
 
   const compositionItems = composition.map((item) => (
@@ -54,18 +65,21 @@ export default function Home() {
         {item.title} (%)
       </label>
       <input
-        type="number" step="any" min="0" max="100"
+        type="number"
+        step="any"
+        min="0"
+        max="100"
         id={item.id}
         value={values[item.id as keyof typeof values]}
-  onChange={(e) => setValues({ ...values, [item.id]: e.target.value })}
+        onChange={(e) => setValues({ ...values, [item.id]: e.target.value })}
         className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-2.5 py-2 shadow-xs placeholder:text-body"
         placeholder=""
-        // NEW: when ash isn't listed, the ash input is greyed out and not required
+        // when ash isn't listed, the ash input is greyed out and not required
         required={!(item.id === "ash" && ashNotListed)}
         disabled={item.id === "ash" && ashNotListed}
       />
 
-      {/* NEW: only render these extra controls under the Ash input */}
+      {/* only render these extra controls under the Ash input */}
       {item.id === "ash" && (
         <div className="mt-2 space-y-2">
           <label className="flex items-center gap-2 text-sm text-gray-700">
@@ -91,7 +105,7 @@ export default function Home() {
                 />
                 <span>
                   Dry food
-                  {/* NEW: the number comes from ESTIMATED_ASH, so it stays in sync */}
+                  {/* the number comes from ESTIMATED_ASH, so it stays in sync */}
                   <span className="block text-xs text-gray-500">
                     Uses a {ESTIMATED_ASH.dry}% ash estimate
                   </span>
@@ -108,7 +122,7 @@ export default function Home() {
                 />
                 <span>
                   Wet food
-                  {/* NEW: the number comes from ESTIMATED_ASH, so it stays in sync */}
+                  {/* the number comes from ESTIMATED_ASH, so it stays in sync */}
                   <span className="block text-xs text-gray-500">
                     Uses a {ESTIMATED_ASH.wet}% ash estimate
                   </span>
@@ -138,7 +152,10 @@ export default function Home() {
 
       <div className="grid md:grid-cols-2 py-5">
         <div className="flex flex-col">
-          <form className="w-full max-w-sm mx-auto space-y-4" onSubmit={handleCalculate}>
+          <form
+            className="w-full max-w-sm mx-auto space-y-4"
+            onSubmit={handleCalculate}
+          >
             {compositionItems}
             <Button />
           </form>
