@@ -56,6 +56,15 @@ export default function Home() {
     });
   }
 
+  // Put everything back to how it was when the page first loaded
+  function handleClear() {
+    setValues({ protein: "", fat: "", fiber: "", moisture: "", ash: "" });
+    setResults(null);
+    setErrors({});
+    setAshNotListed(false);
+    setFoodType("dry");
+  }
+
   function handleCalculate(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -232,6 +241,16 @@ export default function Home() {
             className="w-full max-w-sm mx-auto space-y-4"
             onSubmit={handleCalculate}
           >
+            <div className="flex justify-end">
+              {/* type="button" so clicking Clear doesn't submit the form */}
+              <button
+                type="button"
+                onClick={handleClear}
+                className="rounded-full border border-gray-300 px-4 py-1 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Clear
+              </button>
+            </div>
             {compositionItems}
             <Button />
           </form>

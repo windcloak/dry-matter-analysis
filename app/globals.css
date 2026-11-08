@@ -24,3 +24,9 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Always reserve space for the scrollbar, so the page doesn't shift
+   sideways when it gets tall enough to scroll */
+html {
+  scrollbar-gutter: stable;
+}
