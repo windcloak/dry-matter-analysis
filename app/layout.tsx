@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Dry Matter Analysis Calculator",
-  description: "Calculate the dry matter content of pet food",
+  description: "Convert guaranteed analysis of cat and dog food to dry matter basis and find the protein, fat, fiber, ash, and carbohydrate percentages.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

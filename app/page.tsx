@@ -16,7 +16,7 @@ const ESTIMATED_ASH = { dry: 6, wet: 3 };
 function Button() {
   return (
     <button
-      className="block w-full rounded-lg border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white transition-colors hover:bg-transparent hover:text-indigo-600"
+      className="block w-full rounded-xl bg-secondary-400 px-12 py-3.5 text-lg font-semibold text-white transition-colors hover:bg-secondary-500"
       type="submit"
     >
       Calculate
@@ -117,7 +117,7 @@ export default function Home() {
   const compositionItems = composition.map((item) => (
     <div key={item.id} className="flex flex-col">
       <label
-        className="block mb-2.5 text-sm font-medium text-heading"
+        className="block mb-2.5 text-base font-bold text-primary-900"
         htmlFor={item.id}
       >
         {item.title} (%)
@@ -133,7 +133,7 @@ export default function Home() {
           // this field changed, so its error may be fixed
           clearErrors(item.id);
         }}
-        className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-2.5 py-2 shadow-xs placeholder:text-body"
+        className="block w-full rounded-lg border border-primary-200 bg-white px-3 py-2 text-base text-primary-900 focus:border-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-400/40 disabled:bg-primary-50 disabled:text-primary-300"
         placeholder=""
         // when ash isn't listed, the ash input is greyed out and not required
         required={!(item.id === "ash" && ashNotListed)}
@@ -141,15 +141,16 @@ export default function Home() {
       />
 
       {errors[item.id] && (
-        <p className="mt-1 text-sm text-red-600">{errors[item.id]}</p>
+        <p className="mt-1 text-base text-red-600">{errors[item.id]}</p>
       )}
 
       {/* only render these extra controls under the Ash input */}
       {item.id === "ash" && (
         <div className="mt-2 space-y-2">
-          <label className="flex items-center gap-2 text-sm text-gray-700">
+          <label className="flex items-center gap-2 text-base text-primary-800">
             <input
               type="checkbox"
+              className="accent-secondary-400"
               checked={ashNotListed}
               onChange={(e) => {
                 setAshNotListed(e.target.checked);
@@ -161,7 +162,7 @@ export default function Home() {
 
           {/* Radio buttons only appear when the box is checked */}
           {ashNotListed && (
-            <div className="flex gap-4 pl-6 text-sm text-gray-700">
+            <div className="flex gap-4 pl-6 text-base text-primary-800">
               <label className="flex items-start gap-2">
                 <input
                   type="radio"
@@ -169,12 +170,12 @@ export default function Home() {
                   value="dry"
                   checked={foodType === "dry"}
                   onChange={() => setFoodType("dry")}
-                  className="mt-1"
+                  className="mt-1 accent-secondary-400"
                 />
                 <span>
                   Dry food
                   {/* the number comes from ESTIMATED_ASH, so it stays in sync */}
-                  <span className="block text-xs text-gray-500">
+                  <span className="block text-sm text-primary-600">
                     Uses a {ESTIMATED_ASH.dry}% ash estimate
                   </span>
                 </span>
@@ -186,12 +187,12 @@ export default function Home() {
                   value="wet"
                   checked={foodType === "wet"}
                   onChange={() => setFoodType("wet")}
-                  className="mt-1"
+                  className="mt-1 accent-secondary-400"
                 />
                 <span>
                   Wet food
                   {/* the number comes from ESTIMATED_ASH, so it stays in sync */}
-                  <span className="block text-xs text-gray-500">
+                  <span className="block text-sm text-primary-600">
                     Uses a {ESTIMATED_ASH.wet}% ash estimate
                   </span>
                 </span>
@@ -214,28 +215,35 @@ export default function Home() {
     : [];
 
   const resultItems = resultRows.map((result) => (
-    <li key={result.name}>
-      {result.name}: {result.value.toFixed(1)}%
+    <li
+      key={result.name}
+      className="flex items-baseline justify-between border-b border-white/10 py-3"
+    >
+      <span className="text-md font-bold text-primary-100">{result.name}</span>
+      <span className="text-2xl font-semibold text-white">
+        {result.value.toFixed(1)}
+        <span className="ml-0.5 text-sm text-primary-300">%</span>
+      </span>
     </li>
   ));
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-3">
+    <main className="max-w-5xl mx-auto px-4 py-3 text-primary-900">
       <div>
-        <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl py-5">
-          Dry Food Matter Analysis
+        <h1 className="text-4xl font-bold text-primary-900 sm:text-5xl py-2">
+          Dry Matter Analysis Calculator
         </h1>
-        <h2 className="text-2xl font-bold text-gray-700">
+        <h2 className="text-3xl font-bold text-secondary-400">
           for Cat and Dog Food
         </h2>
-        <p className="mt-4 text-base text-pretty text-gray-700 sm:text-lg/relaxed">
+        <p className="mt-4 text-base text-pretty text-primary-700 sm:text-lg/relaxed">
           Remove water from the equation to compare wet and dry foods on an
           equal basis.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 py-5">
-        <div className="flex flex-col">
+      <div className="grid md:grid-cols-2 my-5 overflow-hidden rounded-3xl border border-primary-100 shadow-sm">
+        <div className="flex flex-col bg-secondary-50 p-8">
           <form
             noValidate
             className="w-full max-w-sm mx-auto space-y-4"
@@ -246,7 +254,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={handleClear}
-                className="rounded-full border border-gray-300 px-4 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                className="rounded-full bg-primary-100 px-5 py-1.5 text-sm font-medium text-primary-800 transition-colors hover:bg-primary-200"
               >
                 Clear
               </button>
@@ -255,10 +263,10 @@ export default function Home() {
             <Button />
           </form>
         </div>
-        <div className="flex flex-col">
-          {results && <ul className="space-y-2">{resultItems}</ul>}
+        <div className="flex flex-col bg-primary-900 p-8 text-white">
+          {results && <ul>{resultItems}</ul>}
           {results && results.carbs < 0 && (
-            <p className="mt-4 text-sm">
+            <p className="mt-4 text-sm text-primary-200">
               Carbohydrates came out below 0%. Protein and fat on the label are
               minimums, and fiber, moisture and ash are maximums, so the numbers
               can add up to more than 100%. This food is very low in
