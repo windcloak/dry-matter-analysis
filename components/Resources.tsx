@@ -1,7 +1,7 @@
 const resources = [
   {
     name: "PetMD",
-    url: "https://www.petmd.com/blogs/nutritionnuggets/cat/jcoates/2013/sept/calculating-carbohydrates-in-your-cats-food-30887", // paste the real URL
+    url: "https://www.petmd.com/blogs/nutritionnuggets/cat/jcoates/2013/sept/calculating-carbohydrates-in-your-cats-food-30887",
     description: "How to Calculate the Carbs in Your Cat's Food",
   },
   {

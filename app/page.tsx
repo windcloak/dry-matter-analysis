@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Resources from "@/components/Resources";
+import NutrientInput from "@/components/NutrientInput";
 
 const composition = [
   { title: "Crude Protein", id: "protein" },
@@ -12,46 +13,6 @@ const composition = [
 ];
 
 const ESTIMATED_ASH = { dry: 6, wet: 3 };
-
-const resources = [
-  {
-    name: "PetMD",
-    url: "https://www.petmd.com/blogs/nutritionnuggets/cat/jcoates/2013/sept/calculating-carbohydrates-in-your-cats-food-30887", // paste the real URL
-    description: "How to Calculate the Carbs in Your Cat's Food",
-  },
-  {
-    name: "Dog Food Advisor - Dry Matter Basis",
-    url: "https://www.dogfoodadvisor.com/choosing-dog-food/dry-matter-basis/",
-    description: "Dry Matter Basis — A Better Way to Compare Dog Food",
-  },
-  {
-    name: "CatFoodDB",
-    url: "https://catfooddb.com/",
-    description: "Cat food reviews",
-  },
-  {
-    name: "Dog Food Advisor",
-    url: "https://www.dogfoodadvisor.com/",
-    description: "Dog food reviews",
-  },
-
-  {
-    name: "Hare Today",
-    url: "https://hare-today.com/raw_food_education",
-    description: "Raw food resources for cats and dogs",
-  },
-];
-
-function Button() {
-  return (
-    <button
-      className="block w-full rounded-xl bg-secondary-600 px-12 py-3.5 text-lg font-semibold text-white transition-colors hover:bg-secondary-500"
-      type="submit"
-    >
-      Calculate
-    </button>
-  );
-}
 
 export default function Home() {
   const [values, setValues] = useState({
@@ -148,35 +109,18 @@ export default function Home() {
     });
   }
   const compositionItems = composition.map((item) => (
-    <div key={item.id} className="flex flex-col">
-      <label
-        className="block mb-2.5 text-base font-bold text-primary-900"
-        htmlFor={item.id}
-      >
-        {item.title} (%)
-      </label>
-      <input
-        type="number"
-        step="any"
-        min="0"
-        id={item.id}
-        value={values[item.id as keyof typeof values]}
-        onChange={(e) => {
-          setValues({ ...values, [item.id]: e.target.value });
-          // this field changed, so its error may be fixed
-          clearErrors(item.id);
-        }}
-        className="block w-full rounded-lg border border-primary-200 bg-white px-3 py-2 text-base text-primary-900 focus:border-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-400/40 disabled:bg-primary-50 disabled:text-primary-300"
-        placeholder=""
-        // when ash isn't listed, the ash input is greyed out and not required
-        required={!(item.id === "ash" && ashNotListed)}
-        disabled={item.id === "ash" && ashNotListed}
-      />
-
-      {errors[item.id] && (
-        <p className="mt-1 text-base text-red-600">{errors[item.id]}</p>
-      )}
-
+    <NutrientInput
+      key={item.id}
+      id={item.id}
+      label={`${item.title} (%)`}
+      value={values[item.id as keyof typeof values]}
+      onChange={(value) => {
+        setValues({ ...values, [item.id]: value });
+        clearErrors(item.id);
+      }}
+      error={errors[item.id]}
+      disabled={item.id === "ash" && ashNotListed}
+    >
       {/* only render these extra controls under the Ash input */}
       {item.id === "ash" && (
         <div className="mt-2 space-y-2">
@@ -234,7 +178,7 @@ export default function Home() {
           )}
         </div>
       )}
-    </div>
+    </NutrientInput>
   ));
 
   const resultRows = results
@@ -293,7 +237,14 @@ export default function Home() {
               </button>
             </div>
             {compositionItems}
-            <Button />
+
+            <button
+              className="block w-full rounded-xl bg-secondary-600 px-12 py-3.5 text-lg font-semibold text-white transition-colors hover:bg-secondary-700"
+              type="submit"
+            >
+              Calculate
+            </button>
+
           </form>
         </div>
         <div className="flex flex-col bg-primary-900 p-8 text-white">
@@ -309,7 +260,7 @@ export default function Home() {
 
           {results && results.ashEstimate !== null && (
             <p className="mt-4 text-sm text-primary-200">
-              Ash wasn't listed, so we used an estimate of {results.ashEstimate}
+              Ash wasn&apos;t listed, so we used an estimate of {results.ashEstimate}
               % for {results.foodType} food.
             </p>
           )}
