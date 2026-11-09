@@ -10,13 +10,41 @@ const composition = [
   { title: "Ash", id: "ash" },
 ];
 
-// Rough average ash values (as fed) to use when the label doesn't list ash. These are estimates
 const ESTIMATED_ASH = { dry: 6, wet: 3 };
+
+const resources = [
+  {
+    name: "PetMD",
+    url: "https://www.petmd.com/blogs/nutritionnuggets/cat/jcoates/2013/sept/calculating-carbohydrates-in-your-cats-food-30887", // paste the real URL
+    description: "How to Calculate the Carbs in Your Cat's Food",
+  },
+  {
+    name: "Dog Food Advisor - Dry Matter Basis",
+    url: "https://www.dogfoodadvisor.com/choosing-dog-food/dry-matter-basis/",
+    description: "Dry Matter Basis — A Better Way to Compare Dog Food",
+  },
+  {
+    name: "CatFoodDB",
+    url: "https://catfooddb.com/",
+    description: "Cat food reviews",
+  },
+  {
+    name: "Dog Food Advisor",
+    url: "https://www.dogfoodadvisor.com/",
+    description: "Dog food reviews",
+  },
+
+  {
+    name: "Hare Today",
+    url: "https://hare-today.com/raw_food_education",
+    description: "Raw food resources for cats and dogs",
+  },
+];
 
 function Button() {
   return (
     <button
-      className="block w-full rounded-xl bg-secondary-400 px-12 py-3.5 text-lg font-semibold text-white transition-colors hover:bg-secondary-500"
+      className="block w-full rounded-xl bg-secondary-600 px-12 py-3.5 text-lg font-semibold text-white transition-colors hover:bg-secondary-500"
       type="submit"
     >
       Calculate
@@ -39,6 +67,8 @@ export default function Home() {
     fiber: number;
     ash: number;
     carbs: number;
+    ashEstimate: number | null; // the estimate used, or null if ash came from the label
+    foodType: "dry" | "wet";
   } | null>(null);
 
   const [ashNotListed, setAshNotListed] = useState(false);
@@ -112,6 +142,8 @@ export default function Home() {
       fiber: fiberDM,
       ash: ashDM,
       carbs: carbDM,
+      ashEstimate: ashNotListed ? ESTIMATED_ASH[foodType] : null,
+      foodType: foodType,
     });
   }
   const compositionItems = composition.map((item) => (
@@ -208,9 +240,9 @@ export default function Home() {
     ? [
         { name: "Protein", value: results.protein },
         { name: "Fat", value: results.fat },
+        { name: "Carbohydrate", value: results.carbs },
         { name: "Fiber", value: results.fiber },
         { name: "Ash", value: results.ash },
-        { name: "Carbohydrate", value: results.carbs },
       ]
     : [];
 
@@ -219,7 +251,7 @@ export default function Home() {
       key={result.name}
       className="flex items-baseline justify-between border-b border-white/10 py-3"
     >
-      <span className="text-md font-bold text-primary-100">{result.name}</span>
+      <span className="text-lg font-bold text-primary-100">{result.name}</span>
       <span className="text-2xl font-semibold text-white">
         {result.value.toFixed(1)}
         <span className="ml-0.5 text-sm text-primary-300">%</span>
@@ -227,44 +259,15 @@ export default function Home() {
     </li>
   ));
 
-  const resources = [
-    {
-      name: "PetMD",
-      url: "https://www.petmd.com/blogs/nutritionnuggets/cat/jcoates/2013/sept/calculating-carbohydrates-in-your-cats-food-30887", // paste the real URL
-      description: "How to Calculate the Carbs in Your Cat's Food",
-    },
-    {
-      name: "Dog Food Advisor - Dry Matter Basis",
-      url: "https://www.dogfoodadvisor.com/choosing-dog-food/dry-matter-basis/",
-      description: "Dry Matter Basis — A Better Way to Compare Dog Food",
-    },
-    {
-      name: "CatFoodDB",
-      url: "https://catfooddb.com/",
-      description: "Cat food reviews",
-    },
-    {
-      name: "Dog Food Advisor",
-      url: "https://www.dogfoodadvisor.com/",
-      description: "Dog food reviews",
-    },
-    
-    {
-      name: "Hare Today",
-      url: "https://hare-today.com/raw_food_education",
-      description: "Raw food resources for cats and dogs",
-    },
-  ];
-
   return (
     <main className="max-w-5xl mx-auto px-4 py-3 text-primary-900">
       <div>
         <h1 className="text-4xl font-bold text-primary-900 sm:text-5xl py-2">
           Dry Matter Analysis Calculator
         </h1>
-        <h2 className="text-3xl font-bold text-secondary-400">
+        <p className="text-3xl font-bold text-secondary-600">
           for Cat and Dog Food
-        </h2>
+        </p>
         <p className="mt-4 text-base text-pretty text-primary-700 sm:text-lg/relaxed">
           Remove water from the equation to compare wet and dry foods on an
           equal basis.
@@ -300,6 +303,13 @@ export default function Home() {
               minimums, and fiber, moisture and ash are maximums, so the numbers
               can add up to more than 100%. This food is very low in
               carbohydrates.
+            </p>
+          )}
+
+          {results && results.ashEstimate !== null && (
+            <p className="mt-4 text-sm text-primary-200">
+              Ash wasn't listed, so we used an estimate of {results.ashEstimate}
+              % for {results.foodType} food.
             </p>
           )}
         </div>
