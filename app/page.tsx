@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Resources from "@/components/Resources";
 
 const composition = [
   { title: "Crude Protein", id: "protein" },
@@ -315,24 +316,7 @@ export default function Home() {
         </div>
       </div>
 
-      <section className="mt-12">
-        <h2 className="text-2xl font-bold text-primary-900">Resources</h2>
-        <ul className="mt-4 space-y-4">
-          {resources.map((resource) => (
-            <li key={resource.url}>
-              <a
-                href={resource.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-secondary-600 underline hover:text-secondary-700"
-              >
-                {resource.name}
-              </a>
-              <p className="text-primary-700">{resource.description}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <Resources />
     </main>
   );
 }
