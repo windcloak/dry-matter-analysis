@@ -7,7 +7,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## About
 
-This is a website I made with React and Next.js. When I shop for cat food, I like to know the composition, such as the protein %, fat %, and carbohydrate % so I can buy healthy food for my cat. I didn't like any of the dry matter analysis calculators online, so I decided to make my own. This website is deployed on Vercel and uses Vercel analytics.
+This is a website I made with React and Next.js. When I shop for cat food, I like to know the composition, such as the protein %, fat %, and carbohydrate % so I can buy healthy food for my cat. I didn't like any of the dry matter analysis calculators online, so I decided to make my own. This website is deployed on Vercel and uses Vercel analytics. I used Claude Code to guide me through the process.
 
 ![App Screenshot](./assets/screenshot.png)
 
